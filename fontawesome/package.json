@@ -1,0 +1,28 @@
+{
+  "name": "fontawesome-free-6.2.1",
+  "version": "6.2.1",
+  "description": "The free fontawesome web icons version 6",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "fontawesome",
+    "fontawesome6",
+    "fontawesome5",
+    "fontawesome",
+    "latest",
+    "fontawesome",
+    "lastest",
+    "icons",
+    "npm",
+    "fontawesome",
+    "latest",
+    "fontawesome",
+    "icons",
+    "fontawesome",
+    "version6"
+  ],
+  "author": "Fonticons, Inc",
+  "license": "ISC"
+}
