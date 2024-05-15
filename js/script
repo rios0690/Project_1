@@ -1,12 +1,10 @@
-$(windows).on('load', function () {
-  if ($('#preloader').length) {
-  $('#preloader').delay(1000).fadeOut('slow', function () {
-  $(this).remove();
-  });
-  }
-  });
-
-
+$(window).on('load', function () {
+	if ($('#preloader').length) {
+	$('#preloader').delay(1000).fadeOut('slow', function () {
+	$(this).remove();
+	});
+	}
+	});
 // ---------------------------------------------------------
 // GLOBAL DECLARATIONS
 // ---------------------------------------------------------
@@ -14,6 +12,7 @@ $(windows).on('load', function () {
 var map;
 var countryCode;
 var countryBorder;
+var currencyIso = null;
 
 // tile layers
 
@@ -48,18 +47,16 @@ var airportIcon = L.icon({
   popupAnchor: [0, -32]
 });
 
-var cityIcon = L.icon({
-  iconUrl: 'icons/cities.png',
-  iconSize: [50, 50],
-  iconAnchor: [16, 32],
-  popupAnchor: [0, -32]
-});
-
 var earthquakesIcon = L.icon({
   iconUrl: 'icons/earthquake.png',
   iconSize: [50, 50],
   iconAnchor: [16, 32],
   popupAnchor: [0, -32]
+});
+
+var cityIcon = L.divIcon({
+  html: '<span class="fa-stack fa-2x"><i class="fa-solid fa-location-pin fa-stack-2x"></i><i class="fa-solid fa-building fa-stack-1x fa-inverse"></i></span>',
+  className: 'myDivIcon'
 });
 
 // ---------------------------------------------------------
@@ -524,8 +521,8 @@ function getCurrencyInfo(countryName) {
         $('#txtCurrencyName').html(result.data.results[0].annotations.currency.name);
         $('#txtCurrencyCode').html(result.data.results[0].annotations.currency.iso_code);
         $('#txtSymbol').html(result.data.results[0].annotations.currency.symbol);
-        var currencyIso = result.data.results[0].annotations.currency.iso_code;
-        converter(currencyIso);
+        currencyIso = result.data.results[0].annotations.currency.iso_code;
+        
 
       }
 
@@ -610,16 +607,11 @@ function currencyConverter(currencyIso) {
 //Converter function to improve usability
 var moneyInput = document.getElementById('quantity');
 function usabilityConverter() {
-  parseFloat(moneyInput.value);
+  if(parseFloat(moneyInput.value) !== 0){
+    currencyConverter(currencyIso)
+  };
 }
-moneyInput.addEventListener('keyup', usabilityConverter);
-
-//calling converter
-function converter(countryIso) {
-  $('#quantity').change(function () {
-    currencyConverter(countryIso)
-  })
-}
+moneyInput.addEventListener('input', usabilityConverter);
 
 //number with commas
 function numberWithCommas(x) {
@@ -629,10 +621,9 @@ function numberWithCommas(x) {
 // initialise and add controls once DOM is ready
 $(document).ready(function () {
   populateList();
+  
   getCountry();
-
-
-
+  
 
   map = L.map("map", {
     layers: [streets]
@@ -664,5 +655,6 @@ var newsBtn = L.easyButton("fa-solid fa-newspaper", function (btn, map) {
 var wikipediaBtn = L.easyButton("fa-brands fa-wikipedia-w", function (btn, map) {
   $("#wikipedia").modal("show");
 });
+
 
 
