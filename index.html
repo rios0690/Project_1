@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="css\toastify.min.css">
     <link rel="stylesheet" href="css\style.css">
 </head>
+
 <body>
     <div id="preloader"></div>
     <span id="selectContainer">
@@ -136,60 +137,70 @@
                     <h5 id="txtCountry" class="modal-title">Current weather</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                         aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped">
+                        <tr></tr>
+                        <td class="text-left"><strong>Today</strong></td>
+                        <td></td>
+                        <td class="text-end"><strong>Temperature Max/Min</strong></td>
+                        </tr>
+                        <tr></tr>
+                        <td id="txtCurrentWeather" class="text-left"></td>
+                        <td>
+                            <img id="imgIcon" class="img-fluid mt-0" src="" alt="weather icon" title="">
+                        </td>
+                        <td class="text-end">
+                            <strong>
+                                <p id="tMax"></p>
+                            </strong>
+                            <strong>
+                                <p id="tMin"></p>
+                            </strong>
+                        </td>
+                        </tr>
+                    </table>
+                    <div class="row">
+                        <div class="col border m-2">
+                            <div class="row">
+                                <div class="col text-center">
+                                    <strong>
+                                        <p class="fw-bold fs-6 mt-3"> Tomorrow</p>
+                                    </strong>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col text-center">
+                                    <p class="fw-bold fs-4 mb-0"><span id="nextDayMaxTemp"></span><sup>o</sup>c</p>
+                                    <p class="fs-5 mt-0 text-secondary"><span id="nextDayMinTemp"></span><sup>o</sup>c
+                                    </p>
+                                </div>
+                                <div class="col text-center">
+                                    <img id="nextDayIcon" src="" alt="weather icon" title="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col border m-2">
+                            <div class="row">
+                                <div class="col text-center">
+                                    <strong>
+                                        <p class="fw-bold fs-6 mt-3">Next 48 hours</p>
+                                    </strong>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col text-center">
+                                    <p class="fw-bold fs-4 mb-0"><span id="dayAfterMaxTemp"></span><sup>o</sup>c</p>
+                                    <p class="fs-5 mt-0 text-secondary"><span id="dayAfterMinTemp"></span><sup>o</sup>c
+                                    </p>
+                                </div>
+                                <div class="col text-center">
+                                    <img id="dayAfterIcon" src="" alt="weather icon" title="">
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="modal-body">
-                        <table class="table table-striped">
-                            <tr></tr>
-                            <td class="text-left"><strong>Today</strong></td>
-                            <td></td>
-                            <td class="text-end"><strong>Temperature Max/Min</strong></td>
-                            </tr>
-                            <tr></tr>
-                                <td id="txtCurrentWeather" class="text-left"></td>
-                                <td>
-                                    <img id="imgIcon" class="img-fluid mt-0" src="" alt="weather icon" title="">
-                                </td>
-                                <td class="text-end">
-                                    <strong><p id="tMax"></p></strong>
-                                    <strong><p id="tMin"></p></strong>
-                                </td>
-                            </tr>
-                        </table>
-                        <div class="row">
-                            <div class="col border m-2">
-                              <div class="row">
-                                <div class="col text-center">
-                                  <strong><p  class="fw-bold fs-6 mt-3"> Tomorrow</p></strong>
-                                </div>
-                              </div>
-                              <div class="row">
-                                <div class="col text-center">
-                                  <p class="fw-bold fs-4 mb-0"><span id="nextDayMaxTemp"></span><sup>o</sup>c</p>
-                                  <p class="fs-5 mt-0 text-secondary"><span id="nextDayMinTemp"></span><sup>o</sup>c</p>
-                                </div>
-                                <div class="col text-center">
-                                  <img id="nextDayIcon" src="" alt="weather icon" title="">
-                                </div>
-                              </div>
-                            </div>
-                            <div class="col border m-2">
-                              <div class="row">
-                                <div class="col text-center">
-                                  <strong><p class="fw-bold fs-6 mt-3">Next 48 hours</p></strong>
-                                </div>
-                              </div>
-                              <div class="row">
-                                <div class="col text-center">
-                                  <p class="fw-bold fs-4 mb-0"><span id="dayAfterMaxTemp"></span><sup>o</sup>c</p>
-                                  <p class="fs-5 mt-0 text-secondary"><span id="dayAfterMinTemp"></span><sup>o</sup>c</p>
-                                </div>
-                                <div class="col text-center">
-                                  <img id="dayAfterIcon" src="" alt="weather icon" title="">
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        
+
                 </div>
                 <div class="modal-footer">
                     <p class="fs-6 fw-light">Powered by <a href="https://openweathermap.org/current" target="_blank"
@@ -200,15 +211,19 @@
         </div>
     </div>
     <!--Currency-->
-    <div id="currency" class="modal" data-bs-backdrop="false" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div id="currency" class="modal fade" tabindex="-1" data-bs-backdrop="false" data-bs-keyboard="false"
+        aria-labelledby="currencyLabel" aria-hidden="true">
+
+        <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+
             <div class="modal-content shadow">
-                <div class="modal-header bg-success bg-gradient text-white">
-                    <img id="imgFlag" src="">
-                    <h5 id="txtCountry" class="modal-title"></h5>
+
+                <div class="modal-header bg-secondary bg-gradient text-white">
+                    <h5 class="modal-title">Currency calculator</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                         aria-label="Close"></button>
                 </div>
+
                 <div class="modal-body">
                     <table class="table table-striped">
                         <tr>
@@ -244,40 +259,65 @@
                             </td>
 
                         </tr>
-                        
+
                     </table>
-                    <div class="form-group">
-                        <label for="quantity">From USD</label>
-                        <input type="number" class="form-control" id="quantity">
-                    </div>
-                    <div class="form-group">
-                        <label for="exchangeRate">Convert to</label>
-                        <span id="targetCurrency"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="quantityResult">Result</label>
-                        <input type="text" class="form-control" id="quantityResult" disabled>
-                    </div>
-                </form>
+
+                    <form>
+
+                        <div class="form-floating mb-3">
+
+                            <input id="quantity" type="number" class="form-control" value="1" min="1" step="1">
+                            <label for="quantity" >From USD</label>
+
+                        </div>
+
+
+
+                        <div class="form-floating mb-3">
+                
+                            <select id="exchangeRate" class="form-select">
+                              <option value=''></option>
+                            </select>
+                            
+                            <label  for="exchangeRate">Convert to</label>
+                
+                        </div>
+                        
+                        <div class="form-floating">
+
+                            <input id="quantityResult" type="text" class="form-control" disabled>
+                            <label  for="quantityResult">Result</label>
+
+                        </div>
+
+                    </form>
+
                 </div>
+
                 <div class="modal-footer">
-                    <p class="fs-6 fw-light">Powered by <a href="https://openexchangerates.org/"
-                            target="_blank" title="Free Exchange Rate Info API">Exchange Rate API</a></p>
+                    <p class="fs-6 fw-light">Powered by <a href="https://openexchangerates.org/" target="_blank"
+                            title="Free Exchange Rate Info API">Exchange Rate API</a></p>
                     <button type="button" class="btn btn-outline-success btn-sm" data-bs-dismiss="modal">Close</button>
                 </div>
+
             </div>
+
         </div>
+
     </div>
     <!--News-->
-    <div id="news" class="modal" data-bs-backdrop="false" tabindex="-1">
+    <div id="news" class="modal fade" tabindex="-1" data-bs-backdrop="false" data-bs-keyboard="false"
+        aria-labelledby="newsLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+
             <div class="modal-content shadow">
-                <div class="modal-header bg-success bg-gradient text-white">
-                    <h5 id="txtCountry" class="modal-title">News</h5>
+
+                <div class="modal-header bg-danger bg-gradient text-white">
+                    <h5 class="modal-title">BREAKING NEWS</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                         aria-label="Close"></button>
                 </div>
-                
+
                 <div id="txtNews" class="modal-body">
                 </div>
                 <div class="modal-footer">
@@ -297,12 +337,12 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                         aria-label="Close"></button>
                 </div>
-                
+
                 <div id="txtWikipedia" class="modal-body">
                 </div>
                 <div class="modal-footer">
-                    <p class="fs-6 fw-light">Powered by <a href="https://www.geonames.org/export/ws-overview.html" target="_blank"
-                            title="Wikipedia Info API">Geonames API</a></p>
+                    <p class="fs-6 fw-light">Powered by <a href="https://www.geonames.org/export/ws-overview.html"
+                            target="_blank" title="Wikipedia Info API"> Wikipedia Geonames API</a></p>
                     <button type="button" class="btn btn-outline-success btn-sm" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -316,6 +356,8 @@
     <script src="js\leaflet.extra-markers.js"></script>
     <script src="js\leaflet.markercluster.js"></script>
     <script src="js\toastify.min.js"></script>
+    <script src="js/datejs.js"></script>
+    <script src="js/numeral.min.js"></script>
     <script src="js\script.js"></script>
 </body>
 
