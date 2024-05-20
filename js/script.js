@@ -1,10 +1,10 @@
 $(window).on('load', function () {
-	if ($('#preloader').length) {
-	$('#preloader').delay(1000).fadeOut('slow', function () {
-	$(this).remove();
-	});
-	}
-	});
+  if ($('#preloader').length) {
+    $('#preloader').delay(1000).fadeOut('slow', function () {
+      $(this).remove();
+    });
+  }
+});
 // ---------------------------------------------------------
 // GLOBAL DECLARATIONS
 // ---------------------------------------------------------
@@ -12,7 +12,6 @@ $(window).on('load', function () {
 var map;
 var countryCode;
 var countryBorder;
-var currencyIso = null;
 
 // tile layers
 
@@ -80,6 +79,8 @@ function populateList() {
             text: result.data[index].name
           }));
         });
+      } else {
+        alert('Error: ' + result.data.status.description);
       }
 
     },
@@ -120,6 +121,8 @@ async function getCountry() {
 
               resolve(result.data.country);
 
+            } else {
+              alert('Error: ' + result.data.status.description);
             }
 
           },
@@ -206,6 +209,8 @@ function getBorders(countryCode) {
         }).addTo(map);
         map.fitBounds(countryBorder.getBounds());
 
+      } else {
+        alert('Error: ' + result.data.status.description);
       }
 
     },
@@ -241,17 +246,21 @@ function getInfo(countryCode) {
         $('#txtLanguages').html(result['data'][0]['languages']);
         $('#txtPopulation').html(numberWithCommas(Math.round(result['data'][0]['population'])));
         $('#txtArea').html(numberWithCommas(Math.round(result['data'][0]['areaInSqKm'])));
-        var north =result['data'][0]['north'];
-        var south=result['data'][0]['south'];
-        var east=result['data'][0]['east'];
-        var west=result['data'][0]['west'];
-        getEarthquakes(north,south,east,west);
+        var north = result['data'][0]['north'];
+        var south = result['data'][0]['south'];
+        var east = result['data'][0]['east'];
+        var west = result['data'][0]['west'];
+        getEarthquakes(north, south, east, west);
 
+      } else {
+        console.log("error fetching country data");
+        alert('Error: ' + result.data.status.description);
       }
 
     },
     error: function (jqXHR, textStatus, errorThrown) {
       console.log('Country Information error', textStatus, errorThrown);
+      alert("No data available for this country, sorry");
 
     }
   });
@@ -295,6 +304,8 @@ function getWeather(latitude, longitude) {
         $('#dayAfterMinTemp').html(Math.round(result['data'][16]['main']['temp_min'] - 273.15));
 
 
+      } else {
+        alert('Error: ' + result.data.status.description);
       }
 
     },
@@ -322,26 +333,37 @@ function getNews(countryCode) {
       console.log(JSON.stringify(result));
 
       if (result.status.name == "ok") {
-        
-        if(result.data == 0){
+
+        if (result.data == 0) {
           $('#txtNews').append("<p>", '<strong>Now news for this country, sorry!</strong>')
+
+        } else {
+
+          $.each(result.data, function (index) {
+
+            $('#txtNews').append("<div>", `<table class="table table-borderless">
           
-         }else{
-
-        $.each(result.data, function (index) {
-          $('#txtNews').append("<div>", `<table class="table table-striped">
-          <tbody>
            <tr>
+           <td rowspan="2" width="50%">
+              <img class="img-fluid rounded" src="https://media.istockphoto.com/id/1369150014/vector/breaking-news-with-world-map-background-vector.jpg?s=612x612&w=0&k=20&c=9pR2-nDBhb7cOvvZU_VdgkMmPJXrBQ4rB1AkTXxRIKM=" alt="" title="">
+            </td>
            
-            <td><a href="${result.data[index].url}" target="_blank">${result.data[index].title}</a></td>
+            <td><a href="${result.data[index].url}" class="fw-bold fs-6 text-black" target="_blank">${result.data[index].title}</a></td>
            </tr>
-           </tbody>
-           </table>`)
-
-        
-        
-        })
-         }
+           <tr>
+                       
+            <td class="align-bottom pb-0">
+              
+              <p class="fw-light fs-6 mb-1">${result.data[index].author}</p>
+              
+            </td>            
+            
+          </tr>
+           
+           </table>
+           <hr>`)
+          })
+        }
       }
 
 
@@ -377,8 +399,11 @@ function getCities(countryCode) {
           L.marker([cityLat, cityLon], { icon: cityIcon })
             .bindTooltip("<div class='col text-center'><strong>" + cityName + "</strong><br><i></i></div>", { direction: 'top', sticky: true })
             .addTo(cityMap);
+          map.addLayer(cityMap);
         }
 
+      } else {
+        alert('Error: ' + result.data.status.description);
       }
 
     },
@@ -391,7 +416,7 @@ function getCities(countryCode) {
 }
 
 //get earthquakes
-function getEarthquakes(north,south,east,west) {
+function getEarthquakes(north, south, east, west) {
 
   $.ajax({
     url: "php/getEarthquakes.php",
@@ -418,13 +443,18 @@ function getEarthquakes(north,south,east,west) {
           L.marker([earthquakeLat, earthquakeLon], { icon: earthquakesIcon })
             .bindTooltip("<div class='col text-center'><strong>" + magnitude + "</strong><br><i></i></div>", { direction: 'top', sticky: true })
             .addTo(earthquakeMap);
+          map.addLayer(earthquakeMap);
         }
 
+      } else {
+        console.log("error fetching earrthquake info");
+        alert('Error: ' + result.data.status.description);
       }
 
     },
     error: function (jqXHR, textStatus, errorThrown) {
       console.log('Location earthquakes error', textStatus, errorThrown);
+      alert("No earthqukes info available, sorry");
 
     }
 
@@ -457,13 +487,18 @@ function getAirports(countryCode) {
           L.marker([airportLat, airportLon], { icon: airportIcon })
             .bindTooltip("<div class='col text-center'><strong>" + airportName + "</strong><br><i></i></div>", { direction: 'top', sticky: true })
             .addTo(airportsMap);
+          map.addLayer(airportsMap);
         }
 
+      } else {
+        console.log("error retrieving airports data");
+        alert('Error: ' + result.data.status.description);
       }
 
     },
     error: function (jqXHR, textStatus, errorThrown) {
       console.log('Location airports error', textStatus, errorThrown);
+      alert("No airports available, sorry!");
 
     }
 
@@ -489,13 +524,17 @@ function getCoordinates(countryName) {
         latitude = result.data.results[0].geometry.lat;
         longitude = result.data.results[0].geometry.lng;
         getWeather(latitude, longitude);
-        getWikipedia(latitude,longitude);
+        getWikipedia(latitude, longitude);
 
+      } else {
+        console.log("error fetching coordinates")
+;        alert('Error: ' + result.data.status.description);
       }
 
     },
     error: function (jqXHR, textStatus, errorThrown) {
       console.log('Coordinates error', textStatus, errorThrown);
+      
 
     }
   });
@@ -521,9 +560,10 @@ function getCurrencyInfo(countryName) {
         $('#txtCurrencyName').html(result.data.results[0].annotations.currency.name);
         $('#txtCurrencyCode').html(result.data.results[0].annotations.currency.iso_code);
         $('#txtSymbol').html(result.data.results[0].annotations.currency.symbol);
-        currencyIso = result.data.results[0].annotations.currency.iso_code;
-        
 
+      } else {
+        console.log("error fetching currency data");
+        alert('Error: ' + result.data.status.description);
       }
 
     },
@@ -553,15 +593,21 @@ function getWikipedia(latitude, longitude) {
       if (result.status.name == "ok") {
         $.each(result.data, function (index) {
           var link = "https://" + result.data[index].wikipediaUrl
+
+          $('#txtWikipedia').append("<div>", `<table class="table table-borderless">
           
-          $('#txtWikipedia').append("<div>", `<table class="table table-striped">
-          <tbody>
-           <tr>
-             <td><a href="${link}" target="_blank">${result.data[index].summary}</a></td>
-           </tr>
-           </tbody>
-           </table>`)
+          <tr>
+          
+          
+           <td><a href="${link}" class="fw-bold fs-6 text-black" target="_blank">${result.data[index].title}</a></td>
+          </tr>
+        
+          </table>
+          <hr>`)
         })
+      } else {
+        console.log("error retriving wikipedia data");
+        alert('Error: ' + result.data.status.description);
       }
 
     },
@@ -571,47 +617,66 @@ function getWikipedia(latitude, longitude) {
     }
   });
 }
-//Currency converter
-function currencyConverter(currencyIso) {
-  var quantity = parseFloat($('#quantity').val());
-  $('#targetCurrency').html(currencyIso);
-
-
+//currency List
+function currencyList() {
   $.ajax({
-    url: "php/currencyConverter.php",
+    url: "php/getExchangeRate.php",
     type: 'POST',
     dataType: 'json',
-    data: {
-
-      currencyIso: currencyIso
-
-    },
     success: function (result) {
 
       console.log(JSON.stringify(result));
 
       if (result.status.name == "ok") {
-
-        var quantityResult = quantity * result.data;
-        $('#quantityResult').val(quantityResult.toFixed(4));
-
+        $.each(result.data, function (key, value) {
+          $('#exchangeRate').append($("<option>", {
+            value: value,
+            text: key
+          }));
+        });
+      } else {
+        console.log("error retrieving exchange rates");
+        alert('Error: ' + result.data.status.description);
       }
 
     },
     error: function (jqXHR, textStatus, errorThrown) {
-      console.log('Currency converter error', textStatus, errorThrown);
+      alert("We couldn't find exchange rate for that country");
+
 
     }
   });
 }
-//Converter function to improve usability
-var moneyInput = document.getElementById('quantity');
-function usabilityConverter() {
-  if(parseFloat(moneyInput.value) !== 0){
-    currencyConverter(currencyIso)
-  };
+
+//Currency converter
+function calcResult() {
+
+  $('#quantityResult').val(numeral($('#quantity').val() * $('#exchangeRate').val()).format("0,0.00"));
+
 }
-moneyInput.addEventListener('input', usabilityConverter);
+
+$('#quantity').on('keyup', function () {
+
+  calcResult();
+
+})
+
+$('#quantity').on('change', function () {
+
+  calcResult();
+
+})
+
+$('#exchangeRate').on('change', function () {
+
+  calcResult();
+
+})
+$('#currency').on('show.bs.modal', function () {
+
+  calcResult();
+
+})
 
 //number with commas
 function numberWithCommas(x) {
@@ -621,13 +686,13 @@ function numberWithCommas(x) {
 // initialise and add controls once DOM is ready
 $(document).ready(function () {
   populateList();
-  
   getCountry();
-  
+  currencyList();
 
   map = L.map("map", {
     layers: [streets]
   })
+
 
   layerControl = L.control.layers(basemaps, overlayMaps).addTo(map);
 
@@ -636,7 +701,8 @@ $(document).ready(function () {
   currencyBtn.addTo(map);
   newsBtn.addTo(map);
   wikipediaBtn.addTo(map);
-  
+
+
 })
 // buttons
 
@@ -655,6 +721,3 @@ var newsBtn = L.easyButton("fa-solid fa-newspaper", function (btn, map) {
 var wikipediaBtn = L.easyButton("fa-brands fa-wikipedia-w", function (btn, map) {
   $("#wikipedia").modal("show");
 });
-
-
-
