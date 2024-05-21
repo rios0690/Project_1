@@ -12,6 +12,7 @@ $(window).on('load', function () {
 var map;
 var countryCode;
 var countryBorder;
+var currencyIso=null;
 
 // tile layers
 
@@ -73,6 +74,11 @@ function populateList() {
     success: function (result) {
       console.log(JSON.stringify(result));
       if (result.status.name == "ok") {
+       // var country = result;
+        //country = Object.values(country).sort((a, b) =>
+        //  a.name.localeCompare(b.name)
+        //);
+
         $.each(result.data, function (index) {
           $('#countrySelect').append($("<option>", {
             value: result.data[index].iso_a2,
@@ -454,7 +460,7 @@ function getEarthquakes(north, south, east, west) {
     },
     error: function (jqXHR, textStatus, errorThrown) {
       console.log('Location earthquakes error', textStatus, errorThrown);
-      alert("No earthqukes info available, sorry");
+      alert("No earthquakes info available, sorry");
 
     }
 
@@ -560,6 +566,11 @@ function getCurrencyInfo(countryName) {
         $('#txtCurrencyName').html(result.data.results[0].annotations.currency.name);
         $('#txtCurrencyCode').html(result.data.results[0].annotations.currency.iso_code);
         $('#txtSymbol').html(result.data.results[0].annotations.currency.symbol);
+        currencyIso=result.data.results[0].annotations.currency.iso_code;
+        currencyList(currencyIso);
+        
+        
+        
 
       } else {
         console.log("error fetching currency data");
@@ -617,8 +628,10 @@ function getWikipedia(latitude, longitude) {
     }
   });
 }
+
 //currency List
-function currencyList() {
+function currencyList(currencyIso) {
+  
   $.ajax({
     url: "php/getExchangeRate.php",
     type: 'POST',
@@ -628,12 +641,20 @@ function currencyList() {
       console.log(JSON.stringify(result));
 
       if (result.status.name == "ok") {
-        $.each(result.data, function (key, value) {
-          $('#exchangeRate').append($("<option>", {
-            value: value,
-            text: key
-          }));
-        });
+        
+          $('#exchangeRate').empty();
+          $.each(result.data, function (key, value) {
+            
+            if(key == currencyIso){
+              $('#exchangeRate').append($("<option>", {
+                value: value,
+                text: key
+              }));
+              
+            }
+          });
+
+        
       } else {
         console.log("error retrieving exchange rates");
         alert('Error: ' + result.data.status.description);
@@ -650,6 +671,7 @@ function currencyList() {
 
 //Currency converter
 function calcResult() {
+  
 
   $('#quantityResult').val(numeral($('#quantity').val() * $('#exchangeRate').val()).format("0,0.00"));
 
@@ -673,10 +695,12 @@ $('#exchangeRate').on('change', function () {
 
 })
 $('#currency').on('show.bs.modal', function () {
-
+  
   calcResult();
 
 })
+
+
 
 //number with commas
 function numberWithCommas(x) {
@@ -687,7 +711,7 @@ function numberWithCommas(x) {
 $(document).ready(function () {
   populateList();
   getCountry();
-  currencyList();
+  
 
   map = L.map("map", {
     layers: [streets]

@@ -17,7 +17,7 @@ $decode = json_decode($result,true);
     for ($i = 0; $i < count($decode['features']); $i++) {
         array_push($countries, $decode['features'][$i]['properties']);
     }
-
+sort($countries);
     $output['status']['code'] = "200";
     $output['status']['name'] = "ok";
     $output['status']['description'] = "success";

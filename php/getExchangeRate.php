@@ -18,10 +18,7 @@ curl_close($ch);
 
 $decode = json_decode($result,true); 
 
-//$exchange=[];
-//foreach ($decode['rates'] as $key => $value) {
-//array_push($exchange, $key); 
-//}
+
 $output['status']['code'] = "200";
 $output['status']['name'] = "ok";
 $output['status']['description'] = "success";
